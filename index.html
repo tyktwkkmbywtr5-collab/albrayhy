@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #03140c 0%, #082918 50%, #03140c 100%);
+:root {
+    --bg-gradient: linear-gradient(135deg, #03140c 0%, #082918 50%, #03140c 100%);
             --card-bg: rgba(12, 45, 27, 0.7);
             --card-border: #1d5c38;
             --gold: #f3d078;
@@ -16,7 +16,60 @@
             --cyan-glow: rgba(46, 204, 113, 0.3);
             --text-light: #f5f5f5;
         }
-        
+/* =========================================
+   تطوير تصميم بطاقات الأقسام (تصميم فاخر حديث)
+   ========================================= */
+
+/* 1. التنسيق العام للبطاقة (الأقسام: الصوتيات، المقالات، الفتاوى...) */
+.card, .category-box, div[class*="card"] {
+    background: linear-gradient(145deg, #121824, #1a2232) !important; /* خلفية داكنة فخمة */
+    border: 1px solid rgba(212, 175, 55, 0.3) !important; /* إطار ذهبي إسلامي أنيق */
+    border-radius: 20px !important; /* حواف ناعمة وانسيابية */
+    padding: 24px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    
+    /* إضاءة ساحرة وهالة خلفية هادئة */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 
+                0 0 15px rgba(212, 175, 55, 0.12) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* 2. خط إضاءة ناعم وزخرفة إسلامية أعلى كل بطاقة */
+.card::before, .category-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d4af37, #f3e5ab, #d4af37, transparent) !important;
+    box-shadow: 0 0 10px #d4af37 !important; /* خط إضاءة مذهب متوهج */
+}
+
+/* 3. تأثير التفاعلية عند تحريك الماوس أو اللمس من الجوال */
+.card:hover, .category-box:hover {
+    transform: translateY(-8px) scale(1.02) !important; /* ارتفاع سلس للأعلى */
+    border-color: rgba(212, 175, 55, 0.8) !important;
+    
+    /* زيادة توهج الإضاءة الساحرة حول البطاقة */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 
+                0 0 30px rgba(212, 175, 55, 0.35) !important;
+}
+
+/* 4. تحسين خطوط الأناوين والعناوين الفرعية */
+.card h3, .card h2, .category-box p, .card div {
+    color: #f5f5f7 !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* 5. أيقونات وحواف الإضاءة الدائرية الداخلية (إن وجدت) */
+.card icon, .card svg, .card i {
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.6)) !important;
+}        
         body {
             font-family: 'Cairo', sans-serif;
             background: var(--bg-gradient);
@@ -150,7 +203,7 @@
 <div class="header">
     <div class="ornament">❖ ﷽ ❖</div>
     <h1 class="header-title">موقع الشيخ عبدالله بن سيف البريهي</h1>
-    <div class="header-sub">المنصة العلمية والدعوية الجامعة</div>
+    <div class="header-sub">المنصة العلمية </div>
     <div class="ornament">◈ ✤ ◈</div>
 </div>
 
