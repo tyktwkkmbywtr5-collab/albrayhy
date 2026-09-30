@@ -238,7 +238,7 @@
                   <div class="item-card">
                       <div class="item-title">${data.title || 'بدون عنوان'}</div>
                       ${data.speaker ? `<div class="item-sub">الشيخ / القارئ: ${data.speaker}</div>` : ''}
-                      ${data.audioUrl ? `<audio controls src="${convertDriveUrl(data.audioUrl}"></audio>` : ''}
+                      ${data.audioUrl ? `<audio controls src="${data.audioUrl}"></audio>` : ''}
                   </div>`;
           });
           container.innerHTML = html;
@@ -268,32 +268,38 @@
           }
           
           let html = '';
-    snap.forEach(doc => {
-      const data = doc.data();
-      if (type === 'audios') {
-        var audioLink = data.audioUrl || '';
-        if (typeof convertDriveUrl === 'function' && audioLink) {
-          audioLink = convertDriveUrl(audioLink);
-        }
-        html += '<div class="item-card">';
-        html += '<div class="item-title">' + (data.title || 'بدون عنوان') + '</div>';
-        if (data.speaker) {
-          html += '<div class="item-sub">الشيخ / القارئ: ' + data.speaker + '</div>';
-        }
-        if (audioLink) {
-          html += '<audio controls src="' + audioLink + '"></audio>';
-          html += '<br><a href="' + audioLink + '" download target="_blank" style="display:inline-block; margin-top:8px; padding:6px 14px; background:#c5a059; color:#fff; border-radius:5px; text-decoration:none; font-weight:bold;">📥 تنزيل الملف الصوتي</a>';
-        }
-        html += '</div>';
-      } else if (type === 'articles') {
-        html += '<div class="item-card"><div class="item-title">' + (data.title || 'بدون عنوان') + '</div><div class="item-body">' + (data.content || '') + '</div></div>';
-      } else if (type === 'fatwas') {
-        html += '<div class="item-card"><div class="item-title">السؤال: ' + (data.question || '') + '</div><div class="item-body"><b>الإجابة:</b> ' + (data.answer || '') + '</div>' + (data.scholar ? '<div class="item-sub">الشيخ: ' + data.scholar + '</div>' : '') + '</div>';
-      } else if (type === 'books') {
-        html += '<div class="item-card"><div class="item-title">' + (data.title || 'بدون عنوان') + '</div>' + (data.author ? '<div class="item-sub">المؤلف: ' + data.author + '</div>' : '') + (data.fileUrl ? '<a href="' + data.fileUrl + '" target="_blank" class="btn-link">📖 تحميل الكتاب (PDF)</a>' : '') + '</div>';
-      }
-    });
-    listDiv.innerHTML = html;
+          snap.forEach(doc => {
+              const data = doc.data();
+              if (type === 'audios') {
+                  html += `
+                      <div class="item-card">
+                          <div class="item-title">${data.title || 'بدون عنوان'}</div>
+                          ${data.speaker ? `<div class="item-sub">الشيخ / القارئ: ${data.speaker}</div>` : ''}
+                          ${data.audioUrl ? `<audio controls src="${data.audioUrl}"></audio>` : ''}
+                      </div>`;
+              } else if (type === 'articles') {
+                  html += `
+                      <div class="item-card">
+                          <div class="item-title">${data.title || 'بدون عنوان'}</div>
+                          <div class="item-body">${data.content || ''}</div>
+                      </div>`;
+              } else if (type === 'fatwas') {
+                  html += `
+                      <div class="item-card">
+                          <div class="item-title">السؤال: ${data.question || ''}</div>
+                          <div class="item-body"><b>الإجابة:</b> ${data.answer || ''}</div>
+                          ${data.scholar ? `<div class="item-sub">الشيخ: ${data.scholar}</div>` : ''}
+                      </div>`;
+              } else if (type === 'books') {
+                  html += `
+                      <div class="item-card">
+                          <div class="item-title">${data.title || 'بدون عنوان'}</div>
+                          ${data.author ? `<div class="item-sub">المؤلف: ${data.author}</div>` : ''}
+                          ${data.fileUrl ? `<a href="${data.fileUrl}" target="_blank" class="btn-link">📥 تحميل الكتاب (PDF)</a>` : ''}
+                      </div>`;
+              }
+          });
+          listDiv.innerHTML = html;
       } catch(e) {
           console.error(e);
           listDiv.innerHTML = '<div class="empty-msg">حدث خطأ أثناء جلب البيانات</div>';
@@ -309,16 +315,6 @@
 
   // تشغيل تحميل أحدث الصوتيات فور فتح الصفحة
   loadLatestAudios();
-function convertDriveUrl(url) {
-  if (!url) return '';
-  if (url.includes('drive.google.com')) {
-    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      return `https://lh3.googleusercontent.com/d/${match[1]}`;
-    }
-  }
-  return url;
-}
 </script>
 
 </body>
