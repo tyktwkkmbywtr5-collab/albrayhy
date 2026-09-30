@@ -166,25 +166,82 @@
     }
     .alert-success { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; }
     .alert-error { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #e74c3c; }
+
+    #loginSection {
+      max-width: 450px;
+      margin: 60px auto 0 auto;
+    }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="header">
-      <h1>لوحة تحكم المحتوى ⚙️</h1>
-      <p>إدارة وإضافة الصوتيات، المقالات، الفتاوى والكتب</p>
+    <!-- شاشة تسجيل الدخول بكلمة السر -->
+    <div id="loginSection" class="card">
+      <h2 class="card-title" style="text-align: center;">تسجيل الدخول للوحة التحكم 🔒</h2>
+      <div id="loginError" class="alert alert-error"></div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>كلمة السر:</label>
+          <input type="password" id="passInput" required placeholder="أدخل كلمة السر هنا">
+        </div>
+        <button type="submit">دخول 🔑</button>
+      </form>
     </div>
 
-    <div class="card">
-      <h2 class="card-title">إضافة عنصر جديد</h2>
-      
-      <div id="alertMsg" class="alert"></div>
+    <!-- المحتوى الرئيسي للمدير (مخفي افتراضياً) -->
+    <div id="adminContent" style="display: none;">
+      <div class="header">
+        <h1>لوحة تحكم المحتوى ⚙️</h1>
+        <p>إدارة وإضافة الصوتيات، المقالات، الفتاوى والكتب</p>
+      </div>
 
-      <form id="addForm">
+      <div class="card">
+        <h2 class="card-title">إضافة عنصر جديد</h2>
+        
+        <div id="alertMsg" class="alert"></div>
+
+        <form id="addForm">
+          <div class="form-group">
+            <label>اختر القسم:</label>
+            <select id="categorySelect" onchange="toggleFields()">
+              <option value="audios">🎙️ الصوتيات والمحاضرات</option>
+              <option value="articles">📝 المقالات والبحوث</option>
+              <option value="fatwas">💡 الفتاوى والأحكام</option>
+              <option value="books">📚 الكتب والرسائل</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label id="titleLabel">عنوان الصوتية:</label>
+            <input type="text" id="itemTitle" required placeholder="أدخل العنوان هنا">
+          </div>
+
+          <div class="form-group" id="speakerGroup">
+            <label id="speakerLabel">الشيخ / القارئ:</label>
+            <input type="text" id="itemSpeaker" placeholder="مثال: الشيخ عبد الله البريهي">
+          </div>
+
+          <div class="form-group" id="urlGroup">
+            <label id="urlLabel">رابط الصوت المباشر (مثل Catbox):</label>
+            <input type="url" id="itemUrl" placeholder="https://files.catbox.moe/...">
+          </div>
+
+          <div class="form-group" id="contentGroup" style="display: none;">
+            <label id="contentLabel">نص المقال / الإجابة:</label>
+            <textarea id="itemContent" rows="5" placeholder="أدخل النص هنا..."></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn">➕ إضافة المحتوى</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">المحتويات المرفوعة (حسب القسم)</h2>
+        
         <div class="form-group">
-          <label>اختر القسم:</label>
-          <select id="categorySelect" onchange="toggleFields()">
+          <label>عرض المحتويات لـ:</label>
+          <select id="viewCategorySelect" onchange="loadItems()">
             <option value="audios">🎙️ الصوتيات والمحاضرات</option>
             <option value="articles">📝 المقالات والبحوث</option>
             <option value="fatwas">💡 الفتاوى والأحكام</option>
@@ -192,45 +249,9 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label id="titleLabel">عنوان الصوتية:</label>
-          <input type="text" id="itemTitle" required placeholder="أدخل العنوان هنا">
+        <div id="itemsList">
+          <p style="text-align: center; color: #aaa;">جاري تحميل العناصر...</p>
         </div>
-
-        <div class="form-group" id="speakerGroup">
-          <label id="speakerLabel">الشيخ / القارئ:</label>
-          <input type="text" id="itemSpeaker" placeholder="مثال: الشيخ عبد الله البريهي">
-        </div>
-
-        <div class="form-group" id="urlGroup">
-          <label id="urlLabel">رابط الصوت المباشر (مثل Catbox):</label>
-          <input type="url" id="itemUrl" placeholder="https://files.catbox.moe/...">
-        </div>
-
-        <div class="form-group" id="contentGroup" style="display: none;">
-          <label id="contentLabel">نص المقال / الإجابة:</label>
-          <textarea id="itemContent" rows="5" placeholder="أدخل النص هنا..."></textarea>
-        </div>
-
-        <button type="submit" id="submitBtn">➕ إضافة المحتوى</button>
-      </form>
-    </div>
-
-    <div class="card">
-      <h2 class="card-title">المحتويات المرفوعة (حسب القسم)</h2>
-      
-      <div class="form-group">
-        <label>عرض المحتويات لـ:</label>
-        <select id="viewCategorySelect" onchange="loadItems()">
-          <option value="audios">🎙️ الصوتيات والمحاضرات</option>
-          <option value="articles">📝 المقالات والبحوث</option>
-          <option value="fatwas">💡 الفتاوى والأحكام</option>
-          <option value="books">📚 الكتب والرسائل</option>
-        </select>
-      </div>
-
-      <div id="itemsList">
-        <p style="text-align: center; color: #aaa;">جاري تحميل العناصر...</p>
       </div>
     </div>
   </div>
@@ -239,7 +260,10 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // إعدادات Firebase الخاصة بمشروعك
+    // يمكنك تغيير كلمة السر للوحة التحكم من السطر التالي:
+    const SECRET_PASSWORD = "123456";
+
+    // إعدادات Firebase الخاص بموقعك
     const firebaseConfig = {
       apiKey: "AIzaSyDn7J5z-zN1QYK1T9iKVJ0BSQhNR866Pes",
       authDomain: "islamic-site-5c2a0.firebaseapp.com",
@@ -251,6 +275,23 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    // التحقق من كلمة السر عند الدخول
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const inputPass = document.getElementById('passInput').value;
+      const errorDiv = document.getElementById('loginError');
+
+      if (inputPass === SECRET_PASSWORD) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        toggleFields();
+        loadItems();
+      } else {
+        errorDiv.innerText = 'كلمة السر غير صحيحة!';
+        errorDiv.style.display = 'block';
+      }
+    });
 
     window.toggleFields = function() {
       const cat = document.getElementById('categorySelect').value;
@@ -400,9 +441,6 @@
         alertDiv.style.display = 'none';
       }, 3000);
     }
-
-    toggleFields();
-    loadItems();
   </script>
 </body>
 </html>
