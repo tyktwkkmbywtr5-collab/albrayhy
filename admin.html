@@ -169,53 +169,54 @@
   </div>
 </div>
 <script type="module">
-    import { getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+  import { getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-    const collections = ['audio', 'articles', 'fatwa', 'books'];
+  // فحص جميع الأقسام بالجمع والمفرد
+  const collections = ['audios', 'audio', 'articles', 'article', 'fatwas', 'fatwa', 'books', 'book'];
 
-    async function loadItemsToDelete() {
-      const listContainer = document.getElementById('deleteItemsList');
-      if (!listContainer) return;
-      listContainer.innerHTML = '';
-      let hasItems = false;
+  async function loadItemsToDelete() {
+    const listContainer = document.getElementById('deleteItemsList');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+    let hasItems = false;
 
-      for (const colName of collections) {
-        try {
-          const querySnapshot = await getDocs(collection(db, colName));
-          querySnapshot.forEach((docSnap) => {
-            hasItems = true;
-            const data = docSnap.data();
-            const title = data.title || data.question || 'محتوى بدون عنوان';
+    for (const colName of collections) {
+      try {
+        const querySnapshot = await getDocs(collection(db, colName));
+        querySnapshot.forEach((docSnap) => {
+          hasItems = true;
+          const data = docSnap.data();
+          const title = data.title || data.question || data.name || 'محتوى بدون عنوان';
 
-            const itemDiv = document.createElement('div');
-            itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: #1d5c38; padding: 10px; margin-bottom: 10px; border-radius: 8px;';
-            
-            itemDiv.innerHTML = `
-              <span><strong>[${colName}]</strong> ${title}</span>
-              <button class="del-btn" style="background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;">حذف 🗑️</button>
-            `;
+          const itemDiv = document.createElement('div');
+          itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: #1d5c38; padding: 10px; margin-bottom: 10px; border-radius: 8px; color: white;';
 
-            itemDiv.querySelector('.del-btn').onclick = async () => {
-              if (confirm(`هل أنت تأكد من حذف: "${title}"؟`)) {
-                await deleteDoc(doc(db, colName, docSnap.id));
-                alert('تم الحذف بنجاح!');
-                loadItemsToDelete();
-              }
-            };
+          itemDiv.innerHTML = `
+            <span><strong>[${colName}]</strong> ${title}</span>
+            <button class="del-btn" style="background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;">حذف 🗑️</button>
+          `;
 
-            listContainer.appendChild(itemDiv);
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      }
+          itemDiv.querySelector('.del-btn').onclick = async () => {
+            if (confirm(`هل أنت متأكد من حذف: "${title}"؟`)) {
+              await deleteDoc(doc(db, colName, docSnap.id));
+              alert('تم الحذف بنجاح!');
+              loadItemsToDelete();
+            }
+          };
 
-      if (!hasItems) {
-        listContainer.innerHTML = '<p style="text-align: center; color: #ccc;">لا يوجد محتوى حالياً.</p>';
+          listContainer.appendChild(itemDiv);
+        });
+      } catch (err) {
+        console.error(err);
       }
     }
 
-    window.addEventListener('load', loadItemsToDelete);
-  </script>
+    if (!hasItems) {
+      listContainer.innerHTML = '<p style="text-align: center; color: #ccc;">لا يوجد محتوى حالياً.</p>';
+    }
+  }
+
+  window.addEventListener('load', loadItemsToDelete);
+</script>
 </body>
 </html>
