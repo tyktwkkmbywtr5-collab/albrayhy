@@ -271,7 +271,10 @@
     snap.forEach(doc => {
       const data = doc.data();
       if (type === 'audios') {
-        var audioLink = (typeof convertDriveUrl === 'function' && data.audioUrl) ? convertDriveUrl(data.audioUrl) : (data.audioUrl || '');
+        var audioLink = data.audioUrl || '';
+        if (typeof convertDriveUrl === 'function' && audioLink) {
+          audioLink = convertDriveUrl(audioLink);
+        }
         html += '<div class="item-card">';
         html += '<div class="item-title">' + (data.title || 'بدون عنوان') + '</div>';
         if (data.speaker) {
