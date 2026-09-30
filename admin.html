@@ -58,7 +58,7 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
-
+window.db = db; 
   // دالة تحويل رابط Google Drive لرابط تشغيل مباشر تلقائياً
   function convertDriveUrl(url) {
       if (!url) return '';
@@ -169,31 +169,23 @@
   </div>
 </div>
 <script type="module">
-  import { getApps } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getFirestore, getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-  // دالة تنتظر اكتمال اتصال الفايربيس تلقائياً
-  async function waitForDb() {
-    for (let i = 0; i < 10; i++) {
-      const apps = getApps();
-      if (apps.length > 0) {
-        return getFirestore(apps[0]);
-      }
-      await new Promise(resolve => setTimeout(resolve, 500)); // انتظار نصف ثانية
-    }
-    return null;
-  }
+  import { getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
   async function loadItemsToDelete() {
     const listContainer = document.getElementById('deleteItemsList');
     if (!listContainer) return;
 
-    listContainer.innerHTML = '<p style="text-align: center; color: #ffd700;">جاري الاتصال بقاعدة البيانات... ⏳</p>';
+    listContainer.innerHTML = '<p style="text-align: center; color: #ffd700;">جاري جلب البيانات... ⏳</p>';
 
-    const db = await waitForDb();
+    // الانتظار القصير لحين التعرف على قاعدة البيانات العامة
+    let db = window.db;
+    for (let i = 0; i < 20 && !db; i++) {
+      await new Promise(resolve => setTimeout(resolve, 250));
+      db = window.db;
+    }
 
     if (!db) {
-      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">تعذر الاتصال، يرجى تحديث الصفحة.</p>';
+      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">تعذر الاتصال بقاعدة البيانات، يرجى التحديث.</p>';
       return;
     }
 
