@@ -1,243 +1,408 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - موقع الشيخ عبدالله البريهي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Cairo', sans-serif; background: #03140c; color: #fff; padding: 20px; text-align: center; }
-        .login-box, .admin-panel { max-width: 500px; margin: 30px auto; background: #082918; border: 1px solid #1d5c38; padding: 25px; border-radius: 15px; text-align: right; }
-        h2 { color: #f3d078; text-align: center; margin-top: 0; }
-        label { font-weight: bold; color: #f3d078; display: block; margin-top: 15px; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #1d5c38; background: #03140c; color: #fff; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        button { width: 100%; background: #f3d078; color: #03140c; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; font-size: 16px; }
-        button:hover { background: #e0be67; }
-        .msg { margin-top: 15px; text-align: center; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم - موقع الشيخ عبد الله بن سيف البريهي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #03140c 0%, #082918 50%, #03140c 100%);
+      --card-bg: rgba(12, 45, 27, 0.85);
+      --card-border: #1d5c38;
+      --gold: #f3d078;
+      --gold-glow: rgba(243, 208, 120, 0.3);
+      --text-light: #f5f5f5;
+      --danger: #e74c3c;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-light);
+      margin: 0;
+      padding: 20px 15px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      font-family: 'Amiri', serif;
+      color: var(--gold);
+      font-size: 28px;
+      margin: 5px 0;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+    }
+
+    .card-title {
+      font-family: 'Amiri', serif;
+      color: var(--gold);
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(243, 208, 120, 0.2);
+      padding-bottom: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: right;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #ddd;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 8px var(--gold-glow);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #f3d078, #cbb058);
+      color: #03140c;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .item-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-right: 4px solid var(--gold);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-title {
+      font-weight: bold;
+      color: var(--gold);
+      font-size: 16px;
+    }
+
+    .item-sub {
+      font-size: 13px;
+      color: #bbb;
+      margin-top: 4px;
+    }
+
+    .btn-delete {
+      width: auto;
+      padding: 6px 14px;
+      background: var(--danger);
+      color: white;
+      font-size: 13px;
+      margin-top: 0;
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      display: none;
+      text-align: center;
+    }
+    .alert-success { background: rgba(46, 204, 113, 0.2); border: 1px solid #2ecc71; color: #2ecc71; }
+    .alert-error { background: rgba(231, 76, 60, 0.2); border: 1px solid #e74c3c; color: #e74c3c; }
+  </style>
 </head>
 <body>
 
-<div class="login-box" id="loginBox">
-    <h2>🔒 دخول لوحة التحكم</h2>
-    <label>كلمة المرور:</label>
-    <input type="password" id="passInput" placeholder="أدخل كلمة المرور (123)">
-    <button onclick="login()">دخول اللوحة</button>
-    <div class="msg" id="loginMsg"></div>
-</div>
+  <div class="container">
+    <div class="header">
+      <h1>لوحة تحكم المحتوى ⚙️</h1>
+      <p>إدارة وإضافة الصوتيات، المقالات، الفتاوى والكتب</p>
+    </div>
 
-<div class="admin-panel" id="adminPanel" style="display: none;">
-    <h2>🚀 إضافة محتوى جديد</h2>
-    
-    <label>اختر القسم:</label>
-    <select id="sectionSelect" onchange="toggleFields()">
-        <option value="audios">🎧 صوتيات ومحاضرات</option>
-        <option value="articles">📝 مقال أو بحث</option>
-        <option value="fatwas">💡 فتوى أو سؤال</option>
-        <option value="books">📚 كتاب أو رسالة (PDF)</option>
-    </select>
+    <div class="card">
+      <h2 class="card-title">إضافة عنصر جديد</h2>
+      
+      <div id="alertMsg" class="alert"></div>
 
-    <div id="fieldsContainer"></div>
+      <form id="addForm">
+        <div class="form-group">
+          <label>اختر القسم:</label>
+          <select id="categorySelect" onchange="toggleFields()">
+            <option value="audios">🎙️ الصوتيات والمحاضرات</option>
+            <option value="articles">📝 المقالات والبحوث</option>
+            <option value="fatwas">💡 الفتاوى والأحكام</option>
+            <option value="books">📚 الكتب والرسائل</option>
+          </select>
+        </div>
 
-    <button onclick="publishContent()">🚀 نشر المحتوى فوراً</button>
-    <div class="msg" id="pubMsg"></div>
-</div>
+        <div class="form-group">
+          <label id="titleLabel">عنوان الصوتية:</label>
+          <input type="text" id="itemTitle" required placeholder="أدخل العنوان هنا">
+        </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        <div class="form-group" id="speakerGroup">
+          <label id="speakerLabel">الشيخ / القارئ:</label>
+          <input type="text" id="itemSpeaker" placeholder="مثال: الشيخ عبد الله البريهي">
+        </div>
 
-  const firebaseConfig = {
+        <div class="form-group" id="urlGroup">
+          <label id="urlLabel">رابط الصوت المباشر (مثل Catbox):</label>
+          <input type="url" id="itemUrl" placeholder="https://files.catbox.moe/...">
+        </div>
+
+        <div class="form-group" id="contentGroup" style="display: none;">
+          <label id="contentLabel">نص المقال / الإجابة:</label>
+          <textarea id="itemContent" rows="5" placeholder="أدخل النص هنا..."></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn">➕ إضافة المحتوى</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title">المحتويات المرفوعة (حسب القسم)</h2>
+      
+      <div class="form-group">
+        <label>عرض المحتويات لـ:</label>
+        <select id="viewCategorySelect" onchange="loadItems()">
+          <option value="audios">🎙️ الصوتيات والمحاضرات</option>
+          <option value="articles">📝 المقالات والبحوث</option>
+          <option value="fatwas">💡 الفتاوى والأحكام</option>
+          <option value="books">📚 الكتب والرسائل</option>
+        </select>
+      </div>
+
+      <div id="itemsList">
+        <p style="text-align: center; color: #aaa;">جاري تحميل العناصر...</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // إعدادات Firebase الخاصة بمشروعك
+    const firebaseConfig = {
       apiKey: "AIzaSyDn7J5z-zN1QYK1T9iKVJ0BSQhNR866Pes",
       authDomain: "islamic-site-5c2a0.firebaseapp.com",
       projectId: "islamic-site-5c2a0",
       storageBucket: "islamic-site-5c2a0.firebasestorage.app",
       messagingSenderId: "971326278",
       appId: "1:971326278:web:73e6b18cf7962f0a280147"
-  };
+    };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-window.db = db; 
-  // دالة تحويل رابط Google Drive لرابط تشغيل مباشر تلقائياً
-  function convertDriveUrl(url) {
-      if (!url) return '';
-      if (url.includes('drive.google.com')) {
-          const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/id=([a-zA-Z0-9_-]+)/);
-          if (match && match[1]) {
-              return `https://drive.google.com/uc?export=download&id=${match[1]}`;
-          }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.toggleFields = function() {
+      const cat = document.getElementById('categorySelect').value;
+      const speakerGroup = document.getElementById('speakerGroup');
+      const urlGroup = document.getElementById('urlGroup');
+      const contentGroup = document.getElementById('contentGroup');
+      
+      const titleLabel = document.getElementById('titleLabel');
+      const speakerLabel = document.getElementById('speakerLabel');
+      const urlLabel = document.getElementById('urlLabel');
+
+      speakerGroup.style.display = 'block';
+      urlGroup.style.display = 'block';
+      contentGroup.style.display = 'none';
+
+      if (cat === 'audios') {
+        titleLabel.innerText = 'عنوان الصوتية:';
+        speakerLabel.innerText = 'الشيخ / القارئ:';
+        urlLabel.innerText = 'رابط الصوت المباشر (مثل Catbox):';
+      } else if (cat === 'articles') {
+        titleLabel.innerText = 'عنوان المقال:';
+        speakerGroup.style.display = 'none';
+        urlGroup.style.display = 'none';
+        contentGroup.style.display = 'block';
+      } else if (cat === 'fatwas') {
+        titleLabel.innerText = 'السؤال / الفتوى:';
+        speakerLabel.innerText = 'اسم الشيخ / المفتي:';
+        urlGroup.style.display = 'none';
+        contentGroup.style.display = 'block';
+        document.getElementById('contentLabel').innerText = 'الإجابة:';
+      } else if (cat === 'books') {
+        titleLabel.innerText = 'عنوان الكتاب / الرسالة:';
+        speakerLabel.innerText = 'المؤلف:';
+        urlLabel.innerText = 'رابط تحميل ملف الكتاب (PDF):';
       }
-      return url;
-  }
+    };
 
-  window.login = function() {
-      const pass = document.getElementById('passInput').value;
-      if(pass === '123') {
-          document.getElementById('loginBox').style.display = 'none';
-          document.getElementById('adminPanel').style.display = 'block';
-          toggleFields();
-      } else {
-          document.getElementById('loginMsg').style.color = '#ff6b6b';
-          document.getElementById('loginMsg').innerText = 'كلمة المرور غير صحيحة!';
-      }
-  };
+    document.getElementById('addForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'جاري الحفظ...';
 
-  window.toggleFields = function() {
-      const type = document.getElementById('sectionSelect').value;
-      const container = document.getElementById('fieldsContainer');
-
-      if(type === 'audios') {
-          container.innerHTML = `
-              <label>عنوان المحاضرة أو الصوتية:</label>
-              <input type="text" id="title" placeholder="مثال: شرح كتاب التوحيد - الدرس الأول">
-              <label>اسم الشيخ / القارئ:</label>
-              <input type="text" id="speaker" value="الشيخ عبدالله بن سيف البريهي">
-              <label>رابط Google Drive للملف الصوتي:</label>
-              <input type="text" id="audioUrl" placeholder="الصق رابط مشاركة Google Drive هنا">
-          `;
-      } else if(type === 'articles') {
-          container.innerHTML = `
-              <label>عنوان المقال:</label>
-              <input type="text" id="title" placeholder="عنوان المقال">
-              <label>نص المقال:</label>
-              <textarea id="content" rows="6" placeholder="اكتب نص المقال هنا..."></textarea>
-          `;
-      } else if(type === 'fatwas') {
-          container.innerHTML = `
-              <label>السؤال:</label>
-              <input type="text" id="question" placeholder="نص السؤال">
-              <label>الإجابة:</label>
-              <textarea id="answer" rows="5" placeholder="نص الإجابة..."></textarea>
-              <label>اسم الشيخ:</label>
-              <input type="text" id="scholar" value="الشيخ عبدالله بن سيف البريهي">
-          `;
-      } else if(type === 'books') {
-          container.innerHTML = `
-              <label>عنوان الكتاب:</label>
-              <input type="text" id="title" placeholder="اسم الكتاب أو الرسالة">
-              <label>اسم المؤلف:</label>
-              <input type="text" id="author" value="الشيخ عبدالله بن سيف البريهي">
-              <label>رابط Google Drive لملف (PDF):</label>
-              <input type="text" id="fileUrl" placeholder="الصق رابط مشاركة Google Drive هنا">
-          `;
-      }
-  };
-
-  window.publishContent = async function() {
-      const type = document.getElementById('sectionSelect').value;
-      const msg = document.getElementById('pubMsg');
-      msg.style.color = '#f3d078';
-      msg.innerText = '⏳ جاري النشر...';
+      const cat = document.getElementById('categorySelect').value;
+      const title = document.getElementById('itemTitle').value;
+      const speaker = document.getElementById('itemSpeaker').value;
+      const url = document.getElementById('itemUrl').value;
+      const content = document.getElementById('itemContent').value;
 
       try {
-          let data = { createdAt: serverTimestamp() };
+        let data = {
+          title: title,
+          createdAt: serverTimestamp()
+        };
 
-          if(type === 'audios') {
-              data.title = document.getElementById('title').value;
-              data.speaker = document.getElementById('speaker').value;
-              data.audioUrl = convertDriveUrl(document.getElementById('audioUrl').value);
-          } else if(type === 'articles') {
-              data.title = document.getElementById('title').value;
-              data.content = document.getElementById('content').value;
-          } else if(type === 'fatwas') {
-              data.question = document.getElementById('question').value;
-              data.answer = document.getElementById('answer').value;
-              data.scholar = document.getElementById('scholar').value;
-          } else if(type === 'books') {
-              data.title = document.getElementById('title').value;
-              data.author = document.getElementById('author').value;
-              data.fileUrl = convertDriveUrl(document.getElementById('fileUrl').value);
-          }
+        if (cat === 'audios') {
+          data.speaker = speaker || 'الشيخ عبد الله البريهي';
+          data.audioUrl = url;
+        } else if (cat === 'articles') {
+          data.content = content;
+        } else if (cat === 'fatwas') {
+          data.question = title;
+          data.answer = content;
+          data.scholar = speaker || 'الشيخ عبد الله البريهي';
+        } else if (cat === 'books') {
+          data.author = speaker || 'الشيخ عبد الله البريهي';
+          data.fileUrl = url;
+        }
 
-          await addDoc(collection(db, type), data);
-          msg.style.color = '#2ecc71';
-          msg.innerText = '✅ تم النشر بنجاح وظهرت في الموقع فوراً!';
-          toggleFields();
-      } catch(e) {
-          console.error(e);
-          msg.style.color = '#ff6b6b';
-          msg.innerText = 'حدث خطأ أثناء النشر!';
-      }
-  };
-</script>
-<!-- قسم عرض المحتوى المرفوع وحذفه -->
-<div style="margin: 40px auto; max-width: 500px; padding: 20px; background: #03140c; border-radius: 15px; color: #fff; text-align: right; direction: rtl;">
-  <h2 style="color: #f3d078; text-align: center;">إدارة المحتوى المرفوع 🗑️</h2>
-  <div id="deleteItemsList" style="margin-top: 15px;">
-    <p style="text-align: center; color: #ccc;">جاري تحميل المحتوى...</p>
-  </div>
-</div>
-<script type="module">
-  import { getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-  async function loadItemsToDelete() {
-    const listContainer = document.getElementById('deleteItemsList');
-    if (!listContainer) return;
-
-    listContainer.innerHTML = '<p style="text-align: center; color: #ffd700;">جاري جلب البيانات... ⏳</p>';
-
-    // الانتظار القصير لحين التعرف على قاعدة البيانات العامة
-    let db = window.db;
-    for (let i = 0; i < 20 && !db; i++) {
-      await new Promise(resolve => setTimeout(resolve, 250));
-      db = window.db;
-    }
-
-    if (!db) {
-      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">تعذر الاتصال بقاعدة البيانات، يرجى التحديث.</p>';
-      return;
-    }
-
-    const collections = [
-      'audios', 'audio', 
-      'articles', 'article', 
-      'fatwas', 'fatwa', 
-      'books', 'book', 
-      'lessons', 'lesson', 
-      'lectures', 'lecture'
-    ];
-
-    listContainer.innerHTML = '';
-    let hasItems = false;
-
-    for (const colName of collections) {
-      try {
-        const querySnapshot = await getDocs(collection(db, colName));
-        querySnapshot.forEach((docSnap) => {
-          hasItems = true;
-          const data = docSnap.data();
-          const title = data.title || data.question || data.name || data.lessonTitle || 'محتوى بدون عنوان';
-
-          const itemDiv = document.createElement('div');
-          itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: #1d5c38; padding: 12px; margin-bottom: 10px; border-radius: 8px; color: white; border: 1px solid #2ecc71;';
-
-          itemDiv.innerHTML = `
-            <span style="font-size: 14px;">📂 <strong>[${colName}]</strong> ${title}</span>
-            <button class="del-btn" style="background: #e74c3c; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold;">حذف 🗑</button>
-          `;
-
-          itemDiv.querySelector('.del-btn').onclick = async () => {
-            if (confirm(`هل أنت متأكد من حذف: "${title}"؟`)) {
-              await deleteDoc(doc(db, colName, docSnap.id));
-              alert('تم الحذف بنجاح!');
-              loadItemsToDelete();
-            }
-          };
-
-          listContainer.appendChild(itemDiv);
-        });
+        await addDoc(collection(db, cat), data);
+        
+        showAlert('تمت الإضافة بنجاح! 🎉', 'success');
+        document.getElementById('addForm').reset();
+        toggleFields();
+        
+        if (document.getElementById('viewCategorySelect').value === cat) {
+          loadItems();
+        }
       } catch (err) {
-        console.error(`خطأ في جلب المجموعة ${colName}:`, err);
+        console.error(err);
+        showAlert('حدث خطأ أثناء الإضافة: ' + err.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = '➕ إضافة المحتوى';
       }
+    });
+
+    window.loadItems = async function() {
+      const cat = document.getElementById('viewCategorySelect').value;
+      const listDiv = document.getElementById('itemsList');
+      listDiv.innerHTML = '<p style="text-align: center; color: #aaa;">جاري التحميل...</p>';
+
+      try {
+        const q = query(collection(db, cat), orderBy('createdAt', 'desc'));
+        const snap = await getDocs(q);
+
+        if (snap.empty) {
+          listDiv.innerHTML = '<p style="text-align: center; color: #aaa;">لا توجد عناصر مرفوعة في هذا القسم حالياً.</p>';
+          return;
+        }
+
+        let html = '';
+        snap.forEach((docSnap) => {
+          const item = docSnap.data();
+          const docId = docSnap.id;
+
+          let displayTitle = item.title || item.question || 'بدون عنوان';
+          let displaySub = item.speaker || item.author || item.scholar || '';
+
+          html += `
+            <div class="item-card">
+              <div class="item-info">
+                <div class="item-title">${displayTitle}</div>
+                ${displaySub ? `<div class="item-sub">${displaySub}</div>` : ''}
+              </div>
+              <button class="btn-delete" onclick="deleteItem('${cat}', '${docId}')">حذف 🗑️</button>
+            </div>
+          `;
+        });
+
+        listDiv.innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        listDiv.innerHTML = '<p style="text-align: center; color: var(--danger);">حدث خطأ أثناء جلب البيانات.</p>';
+      }
+    };
+
+    window.deleteItem = async function(cat, id) {
+      if (!confirm('هل أنت تأكد من رغبتك في حذف هذا العنصر؟')) return;
+
+      try {
+        await deleteDoc(doc(db, cat, id));
+        showAlert('تم الحذف بنجاح! 🗑️', 'success');
+        loadItems();
+      } catch (err) {
+        console.error(err);
+        showAlert('حدث خطأ أثناء الحذف.', 'error');
+      }
+    };
+
+    function showAlert(msg, type) {
+      const alertDiv = document.getElementById('alertMsg');
+      alertDiv.innerText = msg;
+      alertDiv.className = 'alert alert-' + type;
+      alertDiv.style.display = 'block';
+      setTimeout(() => {
+        alertDiv.style.display = 'none';
+      }, 3000);
     }
 
-    if (!hasItems) {
-      listContainer.innerHTML = '<p style="text-align: center; color: #ccc;">لا يوجد محتوى حالياً في قاعدة البيانات.</p>';
-    }
-  }
-
-  window.addEventListener('load', loadItemsToDelete);
-</script>
+    toggleFields();
+    loadItems();
+  </script>
 </body>
 </html>
