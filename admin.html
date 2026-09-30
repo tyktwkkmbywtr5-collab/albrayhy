@@ -169,6 +169,7 @@
   </div>
 </div>
 <script type="module">
+  import { getApps, getApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
   import { getFirestore, getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
   async function loadItemsToDelete() {
@@ -178,9 +179,15 @@
     listContainer.innerHTML = '<p style="text-align: center; color: #ffd700;">جاري تحميل المحتوى... ⏳</p>';
 
     try {
-      // الاتصال المباشر بقاعدة البيانات
-      const db = getFirestore();
+      // الربط التلقائي باتصال الفايربيس الموجود في الصفحة
+      const app = getApps().length > 0 ? getApp() : null;
+      if (!app) {
+        listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">لم يتم العثور على اتصال قاعدة البيانات.</p>';
+        return;
+      }
+      const db = getFirestore(app);
 
+      // قائمة الأقسام المقترحة
       const collections = [
         'audios', 'audio', 
         'articles', 'article', 
@@ -230,7 +237,7 @@
 
     } catch (globalErr) {
       console.error("خطأ الاتصال بقاعدة البيانات:", globalErr);
-      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">حدث خطأ أثناء جلب البيانات، يرجى التحديث.</p>';
+      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">حدث خطأ أثناء جلب البيانات.</p>';
     }
   }
 
