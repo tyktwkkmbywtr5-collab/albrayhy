@@ -169,75 +169,79 @@
   </div>
 </div>
 <script type="module">
-  import { getApps, getApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+  import { getApps } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
   import { getFirestore, getDocs, deleteDoc, doc, collection } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+  // دالة تنتظر اكتمال اتصال الفايربيس تلقائياً
+  async function waitForDb() {
+    for (let i = 0; i < 10; i++) {
+      const apps = getApps();
+      if (apps.length > 0) {
+        return getFirestore(apps[0]);
+      }
+      await new Promise(resolve => setTimeout(resolve, 500)); // انتظار نصف ثانية
+    }
+    return null;
+  }
 
   async function loadItemsToDelete() {
     const listContainer = document.getElementById('deleteItemsList');
     if (!listContainer) return;
 
-    listContainer.innerHTML = '<p style="text-align: center; color: #ffd700;">جاري تحميل المحتوى... ⏳</p>';
+    listContainer.innerHTML = '<p style="text-align: center; color: #ffd700;">جاري الاتصال بقاعدة البيانات... ⏳</p>';
 
-    try {
-      // الربط التلقائي باتصال الفايربيس الموجود في الصفحة
-      const app = getApps().length > 0 ? getApp() : null;
-      if (!app) {
-        listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">لم يتم العثور على اتصال قاعدة البيانات.</p>';
-        return;
+    const db = await waitForDb();
+
+    if (!db) {
+      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">تعذر الاتصال، يرجى تحديث الصفحة.</p>';
+      return;
+    }
+
+    const collections = [
+      'audios', 'audio', 
+      'articles', 'article', 
+      'fatwas', 'fatwa', 
+      'books', 'book', 
+      'lessons', 'lesson', 
+      'lectures', 'lecture'
+    ];
+
+    listContainer.innerHTML = '';
+    let hasItems = false;
+
+    for (const colName of collections) {
+      try {
+        const querySnapshot = await getDocs(collection(db, colName));
+        querySnapshot.forEach((docSnap) => {
+          hasItems = true;
+          const data = docSnap.data();
+          const title = data.title || data.question || data.name || data.lessonTitle || 'محتوى بدون عنوان';
+
+          const itemDiv = document.createElement('div');
+          itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: #1d5c38; padding: 12px; margin-bottom: 10px; border-radius: 8px; color: white; border: 1px solid #2ecc71;';
+
+          itemDiv.innerHTML = `
+            <span style="font-size: 14px;">📂 <strong>[${colName}]</strong> ${title}</span>
+            <button class="del-btn" style="background: #e74c3c; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold;">حذف 🗑</button>
+          `;
+
+          itemDiv.querySelector('.del-btn').onclick = async () => {
+            if (confirm(`هل أنت متأكد من حذف: "${title}"؟`)) {
+              await deleteDoc(doc(db, colName, docSnap.id));
+              alert('تم الحذف بنجاح!');
+              loadItemsToDelete();
+            }
+          };
+
+          listContainer.appendChild(itemDiv);
+        });
+      } catch (err) {
+        console.error(`خطأ في جلب المجموعة ${colName}:`, err);
       }
-      const db = getFirestore(app);
+    }
 
-      // قائمة الأقسام المقترحة
-      const collections = [
-        'audios', 'audio', 
-        'articles', 'article', 
-        'fatwas', 'fatwa', 
-        'books', 'book', 
-        'lessons', 'lesson', 
-        'lectures', 'lecture'
-      ];
-
-      listContainer.innerHTML = '';
-      let hasItems = false;
-
-      for (const colName of collections) {
-        try {
-          const querySnapshot = await getDocs(collection(db, colName));
-          querySnapshot.forEach((docSnap) => {
-            hasItems = true;
-            const data = docSnap.data();
-            const title = data.title || data.question || data.name || data.lessonTitle || 'محتوى بدون عنوان';
-
-            const itemDiv = document.createElement('div');
-            itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: #1d5c38; padding: 12px; margin-bottom: 10px; border-radius: 8px; color: white; border: 1px solid #2ecc71;';
-
-            itemDiv.innerHTML = `
-              <span style="font-size: 14px;">📂 <strong>[${colName}]</strong> ${title}</span>
-              <button class="del-btn" style="background: #e74c3c; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold;">حذف 🗑</button>
-            `;
-
-            itemDiv.querySelector('.del-btn').onclick = async () => {
-              if (confirm(`هل أنت متأكد من حذف: "${title}"؟`)) {
-                await deleteDoc(doc(db, colName, docSnap.id));
-                alert('تم الحذف بنجاح!');
-                loadItemsToDelete();
-              }
-            };
-
-            listContainer.appendChild(itemDiv);
-          });
-        } catch (err) {
-          console.error(`خطأ في جلب المجموعة ${colName}:`, err);
-        }
-      }
-
-      if (!hasItems) {
-        listContainer.innerHTML = '<p style="text-align: center; color: #ccc;">لا يوجد محتوى حالياً في قاعدة البيانات.</p>';
-      }
-
-    } catch (globalErr) {
-      console.error("خطأ الاتصال بقاعدة البيانات:", globalErr);
-      listContainer.innerHTML = '<p style="text-align: center; color: #ff6b6b;">حدث خطأ أثناء جلب البيانات.</p>';
+    if (!hasItems) {
+      listContainer.innerHTML = '<p style="text-align: center; color: #ccc;">لا يوجد محتوى حالياً في قاعدة البيانات.</p>';
     }
   }
 
