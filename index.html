@@ -271,14 +271,17 @@
           snap.forEach(doc => {
               const data = doc.data();
               if (type === 'audios') {
-        html += `
-          <div class="item-card">
-            <div class="item-title">${data.title || 'بدون عنوان'}</div>
-            ${data.speaker ? `<div class="item-sub">الشيخ / القارئ: ${data.speaker}</div>` : ''}
-            ${data.audioUrl ? `<audio controls src="${convertDriveUrl(data.audioUrl)}"></audio><a href="${convertDriveUrl(data.audioUrl)}" download target="_blank" style="display:inline-block; margin-top:8px; padding:6px 14px; background-color:#c5a059; color:#ffffff; text-decoration:none; border-radius:5px; font-size:14px; font-weight:bold;">📥 تنزيل الملف الصوتي</a>` : ''}
-          </div>`;
-      }
-                      </div>`;
+        var audioLink = convertDriveUrl(data.audioUrl || '');
+        html += '<div class="item-card">';
+        html += '<div class="item-title">' + (data.title || 'بدون عنوان') + '</div>';
+        if (data.speaker) {
+          html += '<div class="item-sub">الشيخ / القارئ: ' + data.speaker + '</div>';
+        }
+        if (audioLink) {
+          html += '<audio controls src="' + audioLink + '"></audio>';
+          html += '<br><a href="' + audioLink + '" download target="_blank" style="display:inline-block; margin-top:8px; padding:6px 14px; background:#c5a059; color:#fff; border-radius:5px; text-decoration:none; font-weight:bold;">📥 تنزيل الملف الصوتي</a>';
+        }
+        html += '</div>';
               } else if (type === 'articles') {
                   html += `
                       <div class="item-card">
